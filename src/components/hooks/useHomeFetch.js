@@ -10,6 +10,7 @@ export const useHomeFetch = () => {
     setError(false);
     setLoading(true);
 
+    const isLoadMore = endpoint.search('page');
 
     //-await for the fetch and when got data
     //-parse it into json
@@ -17,7 +18,10 @@ export const useHomeFetch = () => {
       const result = await (await fetch(endpoint)).json();
       setState(prev => ({
         ...prev,
-        movies: [...result.results],
+        movies:
+        isLoadMore !== -1 
+        ? [...prev.movies, ...result.results]
+        : [...result.results],
         heroImage: prev.heroImage || result.results[0],
         currentPage: result.page,
         totalPages: result.total_pages,
