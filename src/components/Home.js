@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  API_URL, 
-  API_KEY, 
+  POPULAR_BASE_URL,
+  SEARCH_BASE_URL,
   POSTER_SIZE, 
   BACKDROP_SIZE,
   IMAGE_BASE_URL
@@ -20,7 +20,6 @@ import { useHomeFetch } from './hooks/useHomeFetch';
 import NoImage from './images/no_image.jpg'
 
 const Home =() =>{
-  const [searchTerm, setSearchTerm] = useState('');
   const [
     { state: { movies, currentPage, totalPages, heroImage },
       loading, 
@@ -28,11 +27,21 @@ const Home =() =>{
     }, 
     fetchMovies,
   ] = useHomeFetch();
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const searchMovies = search => {
+    const endpoint = search ? SEARCH_BASE_URL + search : POPULAR_BASE_URL;
+
+    setSearchTerm(search);
+    fetchMovies(endpoint);
+  }
+
+  
 
 
 const loadMoreMovies = () => {
-  const searchEndPoint = `${API_URL}search/movie?api_key=${API_KEY}&query=${searchTerm}&page=${currentPage + 1}`;
-  const popularEndpoint = `${API_URL}movie/popular?api_key=${API_KEY}&page=${currentPage + 1}`;
+  const searchEndPoint = `${SEARCH_BASE_URL}${searchTerm}&page=${currentPage + 1}`;
+  const popularEndpoint = `${POPULAR_BASE_URL}&page=${currentPage + 1}`;
 
   const endpoint = searchTerm ? searchEndPoint : popularEndpoint;
 
@@ -44,12 +53,14 @@ if(!movies[0]) return <Spinner/>
 
   return(
     <>
+    {!searchTerm && (
       <HeroImage
           image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${heroImage.backdrop_path}`}
           title={heroImage.original_title}
           text={heroImage.overview}
         />
-      <SearchBar/>
+    )}
+      <SearchBar callback={searchMovies}/>
       <Grid header={searchTerm ? 'Search Result' : 'Popular Movies'}>
         {movies.map(movie => (
           <MovieThumb
@@ -57,7 +68,7 @@ if(!movies[0]) return <Spinner/>
             clickable
             image={
               movie.poster_path 
-                ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`
+                ? IMAGE_BASE_URL + POSTER_SIZE + movie.poster_path
                 : NoImage 
               }
               movieId={movie.id}
