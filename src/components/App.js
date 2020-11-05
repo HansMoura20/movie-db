@@ -1,4 +1,7 @@
 import React from 'react';
+import { Router } from '@reach/router';
+import Movie from './Movie';
+import NotFound from './NotFound';
 
 import Header from './elements/Header.js';
 import Home from './Home.js';
@@ -9,7 +12,11 @@ const App = () => {
   return(
     <>
       <Header/>
-      <Home/>
+      <Router>
+        <Home path="/"/>
+        <Movie path="/:movieId" />
+        <NotFound default />
+      </Router>
       <GlobalStyle/>
     </>
   )
