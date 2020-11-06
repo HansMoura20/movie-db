@@ -13,3 +13,10 @@ export const convertMoney = money => {
   });
   return formatter.format(money);
 };
+
+//get current year
+export const currentYear = () =>{
+  let today = new Date();
+  let year = today.getFullYear();
+  return year;
+};

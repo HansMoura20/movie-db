@@ -5,6 +5,7 @@ import NotFound from './NotFound';
 
 import Header from './elements/Header.js';
 import Home from './Home.js';
+import Footer from './elements/Footer';
 
 import { GlobalStyle } from './styles/GlobalStyle';
 
@@ -17,6 +18,7 @@ const App = () => {
         <Movie path="/:movieId" />
         <NotFound default />
       </Router>
+      <Footer/>
       <GlobalStyle/>
     </>
   )
